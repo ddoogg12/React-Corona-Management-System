@@ -8,13 +8,14 @@ const Contents = () => {
     const [quarantinedData, setQuarantinedData] = useState({})
     const [comparedData, setComparedData] = useState({})
 
-    useEffect(()=>{
-        const fetchEvents = async ()=>{
+    useEffect(() => {
+        const fetchEvents = async () => {
             const res = await axios.get("https://api.covid19api.com/total/dayone/country/kr")
             makeData(res.data)
         }
-        const makeData = (items) =>{
-            const arr = items.reduce((acc, cur)=> {
+        const makeData = (items) => {
+            const arr = items.reduce((acc, cur) => {
+                console.log(cur)
                 const currentDate = new Date(cur.Date);
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth();
@@ -23,7 +24,6 @@ const Contents = () => {
                 const active = cur.Active;
                 const death = cur.Deaths;
                 const recovered = cur.Recovered;
-
                 const findItem = acc.find(a => a.year === year && a.month === month);
 
                 if(!findItem){
@@ -40,11 +40,10 @@ const Contents = () => {
                     findItem.confirmed = confirmed;
 
                 }
-
                 return acc;
             }, [])
-
-            const labels = arr.map( a=> '${a.month + 1 }월');
+   
+            const labels = arr.map(a=> `${a.month+1}월`);
             setConfirmedData({
                 labels,
                 datasets: [
@@ -104,7 +103,7 @@ const Contents = () => {
                 </div> 
                 <div>
                     <Doughnut data={comparedData} options={
-                        { title: { display: true, text: '누적 확인, 해제, 사망 (${new Date().getMonth()+1}월)', fontSize: 16 } },
+                        { title: { display: true, text: `누적 확인, 해제, 사망 (${new Date().getMonth()+1}월)`, fontSize: 16 } },
                         { legend: { display: true, position: "bottom"}}
                     } />
                 </div>
